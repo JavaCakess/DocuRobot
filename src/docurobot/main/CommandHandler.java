@@ -30,6 +30,22 @@ public class CommandHandler {
 			}
 			Command.join(args[1]);
 			break;
+		case "crspace":
+			if (NEP(1)) {
+				return;
+			}
+			if (NEP(2)) {
+				Command.crSpace(args[1], null);
+				return;
+			}
+			Command.crSpace(args[1], args[2]);
+			break;
+		case "space-info":
+			if (NEP(1)) {
+				return;
+			}
+			Command.space_info(args[1]);
+			break;
 		}
 	}
 	

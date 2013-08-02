@@ -1,2 +1,4 @@
 help [command] - Shows the help file. If you include the [command] parameter, it will show help for a specific command.
 join {channel} - Joins a channel. It then greets the users on that channel, tell them who DocuRobot was sent by.
+crSpace {name} [access-level] - Creates a space on DocuRobot's memory owned by you. It will go by the name of [name], and if included, with access level {access-level}. If it is not included, it will default to private.
+space-info {name} - Views information about a space.

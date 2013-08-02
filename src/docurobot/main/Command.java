@@ -1,9 +1,10 @@
 package docurobot.main;
 
 import java.io.File;
-import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import docurobot.tools.DocuTools;
 import docurobot.tools.IOTools;
 
 public class Command {
@@ -48,12 +49,12 @@ public class Command {
 		 * First append "Did you mean " to the string.
 		 */
 		suggested = suggested.concat(" Did you mean ");
-		
+
 		/*
 		 * ... Then concatenate the suggested commands.
 		 */
 		for (int i = 0; i < suggestedCommands.size(); i++) {
-			if (i == helpFile.size() - 1) {
+			if (i == suggestedCommands.size() - 1) {
 				suggested = suggested.concat(suggestedCommands.get(i) + "?");
 			} else {
 				suggested = suggested.concat(suggestedCommands.get(i) + ", ");
@@ -77,7 +78,7 @@ public class Command {
 		DocuRobot.send("JOIN " + string + "\r\n");
 		DocuRobot.send(string, "Hi, I'm DocuRobot, vividMario52's bot. I was sent by " + CommandHandler._user + ".");
 	}
-	
+
 	/**
 	 * Create a new space.
 	 * @param name : Name of the space.
@@ -94,17 +95,69 @@ public class Command {
 			CommandHandler.send("That space already exists!!");
 			return;
 		}
-		
+
+		if (pOp != null) {
+			/*
+			 * Is the parameter pOp valid?
+			 */
+			if (!pOp.equalsIgnoreCase("public") && !pOp.equalsIgnoreCase("private")) {
+				/*
+				 * It's not, so we tell them it's not and return.
+				 */
+				CommandHandler.send("The space must be private or public.");
+				return;
+			}
+		} else {
+			pOp = "private";
+		}
+
 		/*
 		 * Otherwise we'll go ahead and create it.
 		 */
-		try {
-			newSpace.createNewFile();
-		} catch (IOException e) {
-			CommandHandler.send("Error creating space.");
+		newSpace.mkdir();
+
+		/*
+		 * Write to spaces_info.txt about the new space we just created.
+		 */
+		ArrayList<String> spaceInfo = IOTools.readFile(spaces_info);
+		spaceInfo.add(name + " " + CommandHandler._user + " " + pOp);
+		IOTools.writeToFile(spaces_info, spaceInfo);
+
+		CommandHandler.send("Space " + name + " successfully created. Access level: " + pOp);
+	}
+
+	public static void space_info(String string) {
+		File space = new File(DocuRobot.spacesPath + string);
+		/*
+		 * Of course, if the space doesn't exist, we
+		 * tell the user and return.
+		 */
+		if (!space.exists()) {
+			CommandHandler.send("That space doesn't exist!");
 			return;
 		}
 		
+		/*
+		 * == Info  Variables ==
+		 * 
+		 * Get the kilobytes, owner, and access level of a space.
+		 */
+		double B = IOTools.folderSize(space);
+		int div = 1024;
+		String str2 = "kB";
+		if (B < 1024) {
+			str2 = "B";
+			div = 1;
+		} else if (B < 1048576) {
+			str2 = "kB";
+			div = 1024;
+		} else {
+			str2 = "mB";
+			div = 1048576;
+		}
+		String owner = DocuTools.getOwnerOfSpace(string);
+		String access_level = DocuTools.getAccLevelOfSpace(string);
 		
+		CommandHandler.send("Owner: " + owner + ", Size: " + IOTools.roundDouble(B / div, 4) + str2 + ", Access Level: " + access_level);
 	}
 }

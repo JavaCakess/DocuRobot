@@ -144,10 +144,10 @@ public class DocuRobot {
 	
 	public static void send(String channel, String msg) {
 		send("PRIVMSG " + channel + " :" + msg + "\r\n");
-		print("[" + time() + "]  >>  [" + channel + "]" + msg);
+		print("[" + time() + "]  >>  [" + channel + "] " + msg);
 	}
 	public static void pm(String user, String msg) {
 		send("PRIVMSG " + user + " :" + msg + "\r\n");
-		print("[" + time() + "]  >>  [" + user + "]" + msg);
+		print("[" + time() + "]  >>  [" + user + "] " + msg);
 	}
 }

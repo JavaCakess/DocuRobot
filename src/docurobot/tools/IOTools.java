@@ -2,6 +2,7 @@ package docurobot.tools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Formatter;
 import java.util.Scanner;
@@ -209,5 +210,25 @@ public class IOTools {
 			}
 		}
 		return tempLargest;
+	}
+	
+	public static double roundDouble(double d, int deciPlaces) {
+		String s = "#.";
+		for (int i = 0; i < deciPlaces; i++) {
+			s = s.concat("#");
+		}
+		DecimalFormat df = new DecimalFormat(s);
+	    return Double.valueOf(df.format(d));
+	}
+	
+	public static long folderSize(File directory) {
+	    long length = 0;
+	    for (File file : directory.listFiles()) {
+	        if (file.isFile())
+	            length += file.length();
+	        else
+	            length += folderSize(file);
+	    }
+	    return length;
 	}
 }
