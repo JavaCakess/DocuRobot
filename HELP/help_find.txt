@@ -1,0 +1,2 @@
+help [command] - Shows the help file. If you include the [command] parameter, it will show help for a specific command.
+join {channel} - Joins a channel. It then greets the users on that channel, tell them who DocuRobot was sent by.
